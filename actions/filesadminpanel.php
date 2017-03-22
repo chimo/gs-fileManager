@@ -76,7 +76,7 @@ class FilesadminpanelAction extends AdminPanelAction
         $this->elementStart('table', array('class' => 'chr-files'));
         $this->elementStart('thead');
         $this->elementStart('tr');
-        $this->element('th', null, 'Thumbnail');
+        $this->element('th', null, 'File');
         $this->element('th', null, 'Size');
         $this->element('th', null, 'Original');
         $this->element('th', null, 'Delete');
@@ -90,10 +90,16 @@ class FilesadminpanelAction extends AdminPanelAction
 
             $this->elementStart('tr');
 
-            // Thumbnail
+            // Link to original file
             $this->elementStart('td');
-            $thumbnail = $file->getThumbnail(); // FIXME: Hanlde file types w/ no thumbnails
-            $this->element('img', $thumbnail->getHtmlAttrs(array('class' => 'file-thumbnail')));
+            $this->elementStart('a', array('href' => $file->getUrl()));
+            if ($file->hasThumbnail()) {
+                $thumbnail = $file->getThumbnail();
+                $this->element('img', $thumbnail->getHtmlAttrs(array('class' => 'file-thumbnail')));
+            } else {
+                $this->text($file->getFilename());
+            }
+            $this->elementEnd('a');
             $this->elementEnd('td');
 
             // Size
