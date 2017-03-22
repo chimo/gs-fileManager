@@ -31,7 +31,26 @@ class FilesadminpanelAction extends AdminPanelAction
 
         $this->files = $file->fetchAll();
 
+        $overview = new File();
+        $overview->selectAdd();
+        $overview->selectAdd('count(*) as total_files');
+        $overview->selectAdd('sum(size) as total_size');
+
+        // TODO: handle cases where this fails for wtv reason
+        if ($overview->find()) {
+            $overview->fetch();
+
+            $this->total_files = $overview->total_files;
+            $this->total_size = $overview->total_size;
+        }
+
         return true;
+    }
+
+    function showOverview() {
+        $bytes = $this->formatBytes($this->total_size);
+
+        $this->element('p', null, "There are $this->total_files files saved on your instance, using $bytes of disk space.");
     }
 
     function formatBytes($size, $precision = 2)
@@ -43,6 +62,10 @@ class FilesadminpanelAction extends AdminPanelAction
     }
 
     function showContent() {
+        if ($this->page === 1) {
+            $this->showOverview();
+        }
+
         if (sizeof($this->files) === 0) {
             $this->element('p', null, 'No files found.'); // TODO: Better msg
 
