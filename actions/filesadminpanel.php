@@ -49,8 +49,9 @@ class FilesadminpanelAction extends AdminPanelAction
 
     function showOverview() {
         $bytes = $this->formatBytes($this->total_size);
+        $nb_files = number_format($this->total_files);
 
-        $this->element('p', null, "There are $this->total_files files saved on your instance, using $bytes of disk space.");
+        $this->element('p', null, "There are $nb_files files saved on your instance, using $bytes of disk space.");
     }
 
     function formatBytes($size, $precision = 2)
