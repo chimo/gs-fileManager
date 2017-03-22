@@ -78,7 +78,7 @@ class FilesadminpanelAction extends AdminPanelAction
         $this->elementStart('tr');
         $this->element('th', null, 'File');
         $this->element('th', null, 'Size');
-        $this->element('th', null, 'Original');
+        $this->element('th', null, 'Referred by');
         $this->element('th', null, 'Delete');
         $this->elementEnd('tr');
         $this->elementEnd('thead');
@@ -105,9 +105,21 @@ class FilesadminpanelAction extends AdminPanelAction
             // Size
             $this->element('td', null, $this->formatBytes($file->getSize()));
 
-            // Link to original file
+            // Referred by
+            $noticeIds = File_to_post::getNoticeIDsByFile($file);
             $this->elementStart('td');
-            $this->element('a', array('href' => $file->getUrl()), 'Link');
+            $this->elementStart('ul');
+
+            foreach($noticeIds as $noticeId) {
+                $notice_url = common_local_url('shownotice',
+                    array('notice' => $noticeId), null, null, false);
+
+                $this->elementStart('li');
+                $this->element('a', array('href' => $notice_url), $noticeId);
+                $this->elementEnd('li');
+            }
+
+            $this->elementEnd('ul');
             $this->elementEnd('td');
 
             // Delete
