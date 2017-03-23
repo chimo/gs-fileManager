@@ -131,7 +131,10 @@ class FilesadminpanelAction extends AdminPanelAction
 
             // Delete
             $this->elementStart('td');
-            $this->element('a', array('class' => 'file-delete', 'href' => $deleteurl), 'Delete');
+            $this->elementStart('div', array('class' => 'notice-options'));
+            $this->element('a',
+                array('class' => 'notice_delete', 'href' => $deleteurl), 'Delete');
+            $this->elementEnd('div');
             $this->elementEnd('td');
 
             $this->elementEnd('tr');
