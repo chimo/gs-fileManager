@@ -103,7 +103,7 @@ class FilesadminpanelAction extends AdminPanelAction
             $this->elementEnd('td');
 
             // Size
-            $this->element('td', null, $this->formatBytes($file->getSize()));
+            $this->element('td', array('class' => 'chr-files__size'), $this->formatBytes($file->getSize()));
 
             // Referred by
             $noticeIds = File_to_post::getNoticeIDsByFile($file);

@@ -13,6 +13,10 @@
     padding: 5px;
 }
 
+.chr-files__size {
+    text-align: right;
+}
+
 .file-thumbnail {
     height: auto;
     max-height: 96px;
