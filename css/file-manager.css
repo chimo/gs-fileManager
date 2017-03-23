@@ -34,3 +34,14 @@
     width: auto;
 }
 
+.sort-icon {
+    opacity: 0.3;
+}
+
+.sort-icon:hover {
+    text-decoration: none;
+}
+
+.sort-icon.active {
+    opacity: 1;
+}

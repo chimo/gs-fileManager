@@ -12,25 +12,47 @@ class FilesadminpanelAction extends AdminPanelAction
     function prepare(array $args=array()) {
         parent::prepare($args);
 
-        $page = isset($args['page']) ? intval($args['page']) : 1;
+        $this->pluginDir = common_root_url() .
+            str_replace(array(INSTALLDIR . '/', '/actions'), '', dirname(__FILE__));
 
-        if ($page <= 0) {
-            $page = 1;
+        $this->page = $this->int('page', 1, null, 1);
+        $this->sortBy = $this->trimmed('sort-by', 'id');
+        $this->sortDir = $this->trimmed('sort-dir', 'asc');
+
+        $sortable_columns = ['id', 'size'];
+
+        // URL param sanitation: make sure 'sort-by' is one of the
+        // columns we're expecting. If not, default sorting by 'id'
+        if (!in_array($this->sortBy, $sortable_columns)) {
+            $this->sortBy = 'id';
         }
 
-        $this->page = $page;
-        $this->args = $args;
+        // URL param sanitation: make sure 'sort-dir' is either 'asc'
+        // or 'desc'. Default to 'asc' if neither.
+        if ($this->sortDir !== 'desc') {
+            $this->sortDir = 'asc';
+        }
 
         $offset = ($this->page - 1) * 10;
         $limit = 10;
 
+        $this->files = $this->getFiles($offset, $limit);
+        $this->overview = $this->getOverview();
+
+        return true;
+    }
+
+    function getFiles($offset, $limit) {
         $file = new File();
 
         $file->whereAdd('filename IS NOT NULL'); // Only local files
+        $file->orderBy($this->sortBy . ' ' . $this->sortDir);
         $file->limit($offset, $limit);
 
-        $this->files = $file->fetchAll();
+        return $file->fetchAll();
+    }
 
+    function getOverview() {
         $overview = new File();
         $overview->selectAdd();
         $overview->selectAdd('count(*) as total_files');
@@ -39,17 +61,17 @@ class FilesadminpanelAction extends AdminPanelAction
         // TODO: handle cases where this fails for wtv reason
         if ($overview->find()) {
             $overview->fetch();
-
-            $this->total_files = $overview->total_files;
-            $this->total_size = $overview->total_size;
         }
 
-        return true;
+        return array(
+            'total_files' => $overview->total_files,
+            'total_size' => $overview->total_size
+        );
     }
 
     function showOverview() {
-        $bytes = $this->formatBytes($this->total_size);
-        $nb_files = number_format($this->total_files);
+        $bytes = $this->formatBytes($this->overview['total_size']);
+        $nb_files = number_format($this->overview['total_files']);
 
         $this->element('p', null, "There are $nb_files files saved on your instance, using $bytes of disk space.");
     }
@@ -60,6 +82,20 @@ class FilesadminpanelAction extends AdminPanelAction
         $suffixes = array('', 'K', 'M', 'G', 'T');
 
         return round(pow(1024, $base - floor($base)), $precision) .' '. $suffixes[floor($base)];
+    }
+
+    function showSort($by, $direction) {
+        $klass = 'sort-icon';
+        $href = '?sort-by=' . $by . '&sort-dir=' . $direction . '&page=' . $this->page;
+        $img_src = $this->pluginDir . '/images/sort-' . $direction . '.png';
+
+        if ($this->sortBy === $by && $this->sortDir === $direction) {
+            $klass .= ' active';
+        }
+
+        $this->elementStart('a', array('class' => $klass, 'href' => $href));
+        $this->element('img', array('src' => $img_src));
+        $this->elementEnd('a');
     }
 
     function showContent() {
@@ -76,8 +112,19 @@ class FilesadminpanelAction extends AdminPanelAction
         $this->elementStart('table', array('class' => 'chr-files'));
         $this->elementStart('thead');
         $this->elementStart('tr');
-        $this->element('th', null, 'File');
-        $this->element('th', null, 'Size');
+
+        $this->elementStart('th');
+        $this->text('File');
+        $this->showSort('id', 'asc');
+        $this->showSort('id', 'desc');
+        $this->elementEnd('th');
+
+        $this->elementStart('th');
+        $this->text('Size');
+        $this->showSort('size', 'asc');
+        $this->showSort('size', 'desc');
+        $this->elementEnd('th');
+
         $this->element('th', null, 'Referred by');
         $this->element('th', null, 'Delete');
         $this->elementEnd('tr');
@@ -175,7 +222,11 @@ class FilesadminpanelAction extends AdminPanelAction
                                             'id' => 'pagination'));
         }
         if ($have_before) {
-            $pargs   = array('page' => $page-1);
+            $pargs = array(
+                'page' => $page - 1,
+                'sort-by' => $this->sortBy,
+                'sort-dir' => $this->sortDir
+            );
             $this->elementStart('li', array('class' => 'nav_prev'));
             $this->element('a', array('href' => common_local_url($action, $args, $pargs),
                                       'rel' => 'prev'),
@@ -185,7 +236,11 @@ class FilesadminpanelAction extends AdminPanelAction
             $this->elementEnd('li');
         }
         if ($have_after) {
-            $pargs   = array('page' => $page + 1);
+            $pargs   = array(
+                'page' => $page + 1,
+                'sort-by' => $this->sortBy,
+                'sort-dir' => $this->sortDir
+            );
             $this->elementStart('li', array('class' => 'nav_next'));
             $this->element('a', array('href' => common_local_url($action, $args, $pargs),
                                       'rel' => 'next'),
