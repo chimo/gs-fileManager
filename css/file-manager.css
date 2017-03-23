@@ -17,6 +17,16 @@
     text-align: right;
 }
 
+.chr-files__referrers {
+    margin: 0;
+}
+
+.chr-files__referrers-list {
+    list-style-position: inside;
+    margin-top: 0;
+    padding-left: 10px;
+}
+
 .file-thumbnail {
     height: auto;
     max-height: 96px;

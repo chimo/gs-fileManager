@@ -108,18 +108,25 @@ class FilesadminpanelAction extends AdminPanelAction
             // Referred by
             $noticeIds = File_to_post::getNoticeIDsByFile($file);
             $this->elementStart('td');
-            $this->elementStart('ul');
 
-            foreach($noticeIds as $noticeId) {
-                $notice_url = common_local_url('shownotice',
-                    array('notice' => $noticeId), null, null, false);
+            if (sizeof($noticeIds >= 0)) {
+                $this->elementStart('figure', array('class' => 'chr-files__referrers'));
+                $this->element('figcaption', null, 'Notice:');
+                $this->elementStart('ul', array('class' => 'chr-files__referrers-list'));
 
-                $this->elementStart('li');
-                $this->element('a', array('href' => $notice_url), $noticeId);
-                $this->elementEnd('li');
+                foreach($noticeIds as $noticeId) {
+                    $notice_url = common_local_url('shownotice',
+                        array('notice' => $noticeId), null, null, false);
+
+                    $this->elementStart('li');
+                    $this->element('a', array('href' => $notice_url), $noticeId);
+                    $this->elementEnd('li');
+                }
+
+                $this->elementEnd('ul');
+                $this->elementEnd('figure');
             }
 
-            $this->elementEnd('ul');
             $this->elementEnd('td');
 
             // Delete
