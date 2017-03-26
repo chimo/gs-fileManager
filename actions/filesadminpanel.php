@@ -163,7 +163,7 @@ class FilesadminpanelAction extends AdminPanelAction
 
             $this->elementStart('td');
 
-            if (sizeof($noticeIds >= 0)) {
+            if (count($noticeIds) > 0) {
                 $this->elementStart('figure', array('class' => 'chr-files__referrers'));
                 $this->element('figcaption', null, 'Notice:');
                 $this->elementStart('ul', array('class' => 'chr-files__referrers-list'));
@@ -179,6 +179,8 @@ class FilesadminpanelAction extends AdminPanelAction
 
                 $this->elementEnd('ul');
                 $this->elementEnd('figure');
+            } else {
+                $this->text('No one');
             }
 
             $this->elementEnd('td');
