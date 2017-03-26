@@ -151,7 +151,15 @@ class FilesadminpanelAction extends AdminPanelAction
             $this->elementEnd('td');
 
             // Size
-            $this->element('td', array('class' => 'chr-files__size'), $this->formatBytes($file->getSize()));
+            $size = $file->getSize();
+
+            if ($size === 0) {
+                $size = 'Information not available';
+            } else {
+                $size = $this->formatBytes($size);
+            }
+
+            $this->element('td', array('class' => 'chr-files__size'), $size);
 
             // Referred by
             $noticeIds = array();
