@@ -57,6 +57,7 @@ class FilesadminpanelAction extends AdminPanelAction
         $overview->selectAdd();
         $overview->selectAdd('count(*) as total_files');
         $overview->selectAdd('sum(size) as total_size');
+        $overview->whereAdd('filename IS NOT NULL');
 
         // TODO: handle cases where this fails for wtv reason
         if ($overview->find()) {
