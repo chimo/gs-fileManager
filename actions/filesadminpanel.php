@@ -103,7 +103,7 @@ class FilesadminpanelAction extends AdminPanelAction
             $this->showOverview();
         }
 
-        if (sizeof($this->files) === 0) {
+        if (count($this->files) === 0) {
             $this->element('p', null, 'No files found.'); // TODO: Better msg
 
             return true;
@@ -212,7 +212,7 @@ class FilesadminpanelAction extends AdminPanelAction
 
         // FIXME: This might give us an empty last page if the total
         //        amount of files is a multiple of 10
-        if (sizeof($this->files) === 10) {
+        if (count($this->files) === 10) {
             $have_after = true;
         }
 
