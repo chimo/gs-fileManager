@@ -23,6 +23,15 @@ class DeletefileadminpanelAction extends AdminPanelAction
         return true;
     }
 
+    function showContent() {
+        $src = $this->file->getUrl();
+
+        // TODO: check mimetype
+        $this->element('img', array('src' => $src));
+
+        parent::showContent();
+    }
+
     function showForm() {
         $form = new DeletefileForm($this, array('file' => $this->file));
 
