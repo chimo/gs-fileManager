@@ -19,7 +19,7 @@ class FilesadminpanelAction extends AdminPanelAction
         $this->sortBy = $this->trimmed('sort-by', 'id');
         $this->sortDir = $this->trimmed('sort-dir', 'asc');
 
-        $sortable_columns = ['id', 'size'];
+        $sortable_columns = ['id', 'size', 'date'];
 
         // URL param sanitation: make sure 'sort-by' is one of the
         // columns we're expecting. If not, default sorting by 'id'
@@ -126,6 +126,12 @@ class FilesadminpanelAction extends AdminPanelAction
         $this->showSort('size', 'desc');
         $this->elementEnd('th');
 
+        $this->elementStart('th');
+        $this->text('Date created');
+        $this->showSort('date', 'asc');
+        $this->showSort('date', 'desc');
+        $this->elementEnd('th');
+
         $this->element('th', null, 'Referred by');
         $this->element('th', null, 'Delete');
         $this->elementEnd('tr');
@@ -160,6 +166,16 @@ class FilesadminpanelAction extends AdminPanelAction
             }
 
             $this->element('td', array('class' => 'chr-files__size'), $size);
+
+            // Date created
+            if ($file->date) {
+                $date_created = date('Y-m-d', $file->date);
+            } else {
+                // Sometime 'date' is null
+                $date_created = '?';
+            }
+
+            $this->element('td', null, $date_created);
 
             // Referred by
             $noticeIds = array();
