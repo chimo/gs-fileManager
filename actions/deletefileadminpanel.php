@@ -36,6 +36,10 @@ class DeletefileadminpanelAction extends AdminPanelAction
         parent::showContent();
     }
 
+    function getInstructions() {
+        return 'Are you sure you want to delete this file?';
+    }
+
     function showForm() {
         $form = new DeletefileForm($this, array('file' => $this->file));
 
