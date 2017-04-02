@@ -23,13 +23,6 @@ class DeletefileadminpanelAction extends AdminPanelAction
         return true;
     }
 
-    // FIXME: This doesn't get called(??)
-    protected function doPost() {
-        // TODO: Actually delete the notice
-
-        return _('File deleted.');
-    }
-
     function showForm() {
         $form = new DeletefileForm($this, array('file' => $this->file));
 
