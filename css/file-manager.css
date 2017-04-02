@@ -8,6 +8,10 @@
     border: 1px solid #ddd;
 }
 
+.chr-file-image {
+    max-width: 100%;
+}
+
 #content .chr-files td,
 .chr-files th {
     padding: 5px;

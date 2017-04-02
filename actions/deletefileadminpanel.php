@@ -31,7 +31,7 @@ class DeletefileadminpanelAction extends AdminPanelAction
         $src = $this->file->getUrl();
 
         // TODO: check mimetype
-        $this->element('img', array('src' => $src));
+        $this->element('img', array('class' => 'chr-file-image', 'src' => $src));
 
         parent::showContent();
     }
