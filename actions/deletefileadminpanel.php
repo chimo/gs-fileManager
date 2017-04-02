@@ -14,8 +14,6 @@ class DeletefileadminpanelAction extends AdminPanelAction
     function prepare(array $args=array()) {
         parent::prepare($args);
 
-        // TODO: handle cases where we don't have a fileId
-
         $fileId = $args['file'];
 
         $this->file = File::getKV('id', $fileId);
@@ -24,6 +22,12 @@ class DeletefileadminpanelAction extends AdminPanelAction
     }
 
     function showContent() {
+        if (!$this->file instanceof File) {
+            $this->element('p', null, 'Unable to find the requested file.');
+
+            return;
+        }
+
         $src = $this->file->getUrl();
 
         // TODO: check mimetype
