@@ -12,9 +12,6 @@ class FilesadminpanelAction extends AdminPanelAction
     function prepare(array $args=array()) {
         parent::prepare($args);
 
-        $this->pluginDir = common_root_url() .
-            str_replace(array(INSTALLDIR . '/', '/actions'), '', dirname(__FILE__));
-
         $this->page = $this->int('page', 1, null, 1);
         $this->sortBy = $this->trimmed('sort-by', 'id');
         $this->sortDir = $this->trimmed('sort-dir', 'asc');
@@ -86,9 +83,10 @@ class FilesadminpanelAction extends AdminPanelAction
     }
 
     function showSort($by, $direction) {
+        $pluginPath = Plugin::staticPath('FileManager', "");
         $klass = 'sort-icon';
         $href = '?sort-by=' . $by . '&sort-dir=' . $direction . '&page=' . $this->page;
-        $img_src = $this->pluginDir . '/images/sort-' . $direction . '.png';
+        $img_src = $pluginPath . '/images/sort-' . $direction . '.png';
 
         if ($this->sortBy === $by && $this->sortDir === $direction) {
             $klass .= ' active';
