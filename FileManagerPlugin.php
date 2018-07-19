@@ -27,6 +27,8 @@ class FileManagerPlugin extends Plugin
 
     function onEndShowStyles($action) {
         $action->cssLink($this->path('css/file-manager.css'));
+
+        return true;
     }
 
     /**

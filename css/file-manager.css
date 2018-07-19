@@ -1,3 +1,34 @@
+#filesadminpanel #core * {
+    box-sizing: border-box;
+}
+
+#filesadminpanel #pagination {
+    box-sizing: content-box;
+}
+
+#filesadminpanel #site_nav_local_views_wrapper {
+    background: #fff;
+    border: 0;
+}
+
+#filesadminpanel #aside_primary,
+#filesadminpanel #site_nav_local_views {
+    display: none;
+}
+
+#filesadminpanel #core {
+    border-left: 0;
+    border-right: 0;
+    float: none;
+    width: auto;
+}
+
+#filesadminpanel #content {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+#filesadminpanel #content,
 .chr-files {
     width: 100%;
 }
@@ -31,7 +62,7 @@
     padding-left: 10px;
 }
 
-.file-thumbnail {
+.chr-files .file-thumbnail {
     height: auto;
     max-height: 96px;
     max-width: 96px;
